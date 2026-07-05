@@ -1,0 +1,5 @@
+# Firebase / Google API secrets
+**/google-services.json
+**/GoogleService-Info.plist
+**/lib/firebase_options.dart
+**/lib/secrets.dart

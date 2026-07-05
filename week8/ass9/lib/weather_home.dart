@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'secrets.dart';
+
 class WeatherHome extends StatefulWidget {
   const WeatherHome({super.key});
 
@@ -16,9 +18,8 @@ class _WeatherHomeState extends State<WeatherHome> {
   bool _isLoading = false;
 
   Future<void> getWeather(String city) async {
-    const apiKey = '2c40a67ed542f25414869cd50c9398e5';
     final url = Uri.parse(
-      'https://api.openweathermap.org/data/2.5/weather?q=$city&appid=$apiKey&units=metric',
+      'https://api.openweathermap.org/data/2.5/weather?q=$city&appid=$openWeatherApiKey&units=metric',
     );
     setState(() => _isLoading = true);
 
