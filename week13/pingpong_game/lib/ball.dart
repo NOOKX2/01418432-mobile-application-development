@@ -1,0 +1,19 @@
+import 'package:flutter/material.dart';
+
+class Ball extends StatelessWidget {
+  final Color color;
+  const Ball({super.key, required this.color });
+
+  @override
+  Widget build(BuildContext context) {
+    final double diam = 50;
+    return Container(
+      width: diam,
+      height: diam,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+      ),
+    );
+  }
+}
