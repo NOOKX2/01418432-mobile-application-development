@@ -3,7 +3,7 @@
 <plist version="1.0">
 	<dict>
 		<key>GIDClientID</key>
-		<string>490224731202-gtmle7bv8f8lp2k38t3kkmob66qiumr9.apps.googleusercontent.com</string>
+		<string>YOUR_IOS_CLIENT_ID</string>
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleDisplayName</key>
@@ -50,7 +50,7 @@
 				<string>Editor</string>
 				<key>CFBundleURLSchemes</key>
 				<array>
-					<string>com.googleusercontent.apps.490224731202-gtmle7bv8f8lp2k38t3kkmob66qiumr9</string>
+					<string>YOUR_IOS_REVERSED_CLIENT_ID</string>
 				</array>
 			</dict>
 		</array>

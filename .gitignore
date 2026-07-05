@@ -1,5 +1,12 @@
-# Firebase / Google API secrets
+# Environment files
+**/.env
+!**/.env.example
+
+# Firebase native config (generated from .env via tool/generate_native_config.sh)
 **/google-services.json
 **/GoogleService-Info.plist
-**/lib/firebase_options.dart
+**/firebase.json
+!**/firebase.json.example
+
+# Local secrets (legacy)
 **/lib/secrets.dart

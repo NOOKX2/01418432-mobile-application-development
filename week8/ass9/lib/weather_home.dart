@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
-import 'secrets.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class WeatherHome extends StatefulWidget {
   const WeatherHome({super.key});
@@ -18,8 +17,14 @@ class _WeatherHomeState extends State<WeatherHome> {
   bool _isLoading = false;
 
   Future<void> getWeather(String city) async {
+    final apiKey = dotenv.env['OPENWEATHER_API_KEY'];
+    if (apiKey == null || apiKey.isEmpty) {
+      setState(() => _desc = 'Missing OPENWEATHER_API_KEY in .env');
+      return;
+    }
+
     final url = Uri.parse(
-      'https://api.openweathermap.org/data/2.5/weather?q=$city&appid=$openWeatherApiKey&units=metric',
+      'https://api.openweathermap.org/data/2.5/weather?q=$city&appid=$apiKey&units=metric',
     );
     setState(() => _isLoading = true);
 

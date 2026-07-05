@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+# Blocks commits that contain secrets or sensitive config files.
+set -euo pipefail
+
+RED='\033[0;31m'
+NC='\033[0m'
+
+fail() {
+  echo -e "${RED}COMMIT BLOCKED:${NC} $1" >&2
+  exit 1
+}
+
+STAGED=$(git diff --cached --name-only --diff-filter=ACM 2>/dev/null || true)
+
+if [[ -z "$STAGED" ]]; then
+  exit 0
+fi
+
+BLOCKED_PATHS=(
+  '.env'
+  'google-services.json'
+  'GoogleService-Info.plist'
+  'firebase.json'
+  'secrets.dart'
+)
+
+while IFS= read -r file; do
+  [[ -z "$file" ]] && continue
+
+  basename="${file##*/}"
+
+  if [[ "$basename" == .env ]]; then
+    fail "Do not commit .env files ($file). Use .env.example instead."
+  fi
+
+  for blocked in "${BLOCKED_PATHS[@]}"; do
+    if [[ "$basename" == "$blocked" ]]; then
+      fail "Do not commit $blocked ($file). It is generated locally from .env."
+    fi
+  done
+
+  if [[ "$file" == *.env.example ]]; then
+    if git diff --cached -- "$file" | grep -qE '^\+.*=(AIzaSy|[a-f0-9]{32})'; then
+      fail "Real API key detected in $file. Use placeholder values only."
+    fi
+  fi
+
+  if git diff --cached -- "$file" | grep -qE '^\+.*AIzaSy[A-Za-z0-9_-]{20,}'; then
+    fail "Google API key (AIzaSy...) detected in staged changes: $file"
+  fi
+
+  if git diff --cached -- "$file" | grep -qE '^\+.*[0-9]+-[a-z0-9]+\.apps\.googleusercontent\.com'; then
+    fail "Google OAuth client ID detected in staged changes: $file"
+  fi
+
+  if git diff --cached -- "$file" | grep -qE '^\+.*com\.googleusercontent\.apps\.[0-9]+-'; then
+    fail "Google reversed client ID detected in staged changes: $file"
+  fi
+
+  if git diff --cached -- "$file" | grep -qE '^\+.*(ghp_|gho_|github_pat_|sk_live_|sk_test_|xox[baprs]-)'; then
+    fail "Known secret token pattern detected in staged changes: $file"
+  fi
+done <<< "$STAGED"
+
+exit 0
